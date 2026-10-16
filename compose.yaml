@@ -1,0 +1,14 @@
+services:
+  komodo-mailer:
+    build: .
+    container_name: komodo-mailer
+    restart: unless-stopped
+    env_file: .env
+    # No published ports: Komodo Core reaches this over the shared Docker network.
+    networks:
+      - komodo
+
+networks:
+  komodo:
+    external: true
+    name: ${KOMODO_NETWORK:-komodo_default}
