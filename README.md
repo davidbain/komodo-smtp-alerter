@@ -5,9 +5,9 @@ Email alerts for [Komodo](https://komo.do). A small container that receives aler
 ## Features
 
 - HTML email with a colour-coded status banner and a table of the key details, plus a plain-text fallback.
-- Friendly titles for Komodo alert types, such as `[CRITICAL] Server unreachable: web-01`.
-- Resolved alerts are skipped by default, so you only get emailed about new problems.
-- A shared token protects the endpoint. TLS is always used to talk to the SMTP relay.
+- Friendly titles for Komodo alert types, such as `[CRITICAL] Server unreachable: server-1`.
+- Resolved alerts are skipped by default.
+- A shared token protects the endpoint.
 
 ## Quick start
 
@@ -31,7 +31,7 @@ Email alerts for [Komodo](https://komo.do). A small container that receives aler
 
 4. Click **Test Alerter** and check that the email arrives.
 
-If you deploy it as a Komodo Stack, turn on **Run Build** in the Stack config. Otherwise redeploys keep using the old image.
+If you deploy the SMTP alerter as a Komodo Stack, turn on **Run Build** in the Stack config, otherwise redeploys will keep using the old image.
 
 ## Configuration
 
@@ -44,11 +44,9 @@ If you deploy it as a Komodo Stack, turn on **Run Build** in the Stack config. O
 | `MAIL_FROM` | Yes | | Sender address. It must be allowed to send through your relay |
 | `MAIL_TO` | Yes | | Comma-separated recipients |
 | `AUTH_TOKEN` | Yes | | Shared secret Komodo passes as `?token=`. Generate one with `openssl rand -hex 32` |
-| `SEND_RESOLVED` | No | `false` | Also email when an alert clears |
+| `SEND_RESOLVED` | No | `false` | Also email when an alert clears (doesn't affect test notifications) |
 | `LOG_LEVEL` | No | `INFO` | `DEBUG` also logs the raw JSON of every alert |
 | `KOMODO_NETWORK` | No | `komodo_default` | Docker network that Komodo Core is attached to |
-
-Komodo sends **Test Alerter** alerts already marked as resolved, so they are always sent whatever `SEND_RESOLVED` is set to.
 
 ## Responses
 
@@ -64,7 +62,6 @@ Failed sends are not queued or retried.
 
 ## Security
 
-- No host port is published. Only containers on the Komodo network can reach the service.
-- The token is compared in constant time. Access logging is turned off so the token in the URL is never written to logs.
+- Only containers on the Komodo network can reach the service.
 - Every alert value is HTML-escaped before it is put into the email.
 - The container runs as `nobody`. `.env` is excluded from Git and from the Docker build context.
