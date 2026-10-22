@@ -1,4 +1,4 @@
-# komodo-mailer
+# komodo-smtp-mailer
 
 Email alerts for [Komodo](https://komo.do). A small container that receives alerts from a Komodo **Custom** alerter and sends them as HTML email through any SMTP relay. It uses only the Python standard library.
 
